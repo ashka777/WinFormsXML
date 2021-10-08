@@ -1,0 +1,17 @@
+﻿CREATE TABLE [dbo].[Client] (
+    [CARDCODE]   DECIMAL (10, 2) NULL,
+    [STARTDATE]  DATETIME        NULL,
+    [FINISHDATE] DATETIME        NULL,
+    [LASTNAME]   NVARCHAR (50)   NULL,
+    [FIRSTNAME]  NVARCHAR (50)   NULL,
+    [SURNAME]    NVARCHAR (50)   NULL,
+    [GENDER]     NVARCHAR (10)   NULL,
+    [BIRTHDAY]   DATETIME        NULL,
+    [PHONEHOME]  NVARCHAR (10)   NULL,
+    [PHONEMOBIL] NVARCHAR (20)   NULL,
+    [EMAIL]      NVARCHAR (50)   NULL,
+    [CITY]       NVARCHAR (50)   NULL,
+    [STREET]     NVARCHAR (50)   NULL,
+    [HOUSE]      INT             NULL,
+    [APARTMENT]  INT             NULL
+);
