@@ -24,33 +24,42 @@ namespace WinFormsXML.Models
         [XmlAttribute(AttributeName = "FINISHDATE")]
         public DateTime FINISHDATE { get; set; }
 
+        [Column(TypeName = "nvarchar(50)")]
         [XmlAttribute(AttributeName = "LASTNAME")]
         public string LASTNAME { get; set; }
 
+        [Column(TypeName = "nvarchar(50)")]
         [XmlAttribute(AttributeName = "FIRSTNAME")]
         public string FIRSTNAME { get; set; }
 
+        [Column(TypeName = "nvarchar(50)")]
         [XmlAttribute(AttributeName = "SURNAME")]
         public string SURNAME { get; set; }
 
+        [Column(TypeName = "nvarchar(10)")]
         [XmlAttribute(AttributeName = "GENDER")]
         public string GENDER { get; set; }
 
         [XmlAttribute(AttributeName = "BIRTHDAY")]
         public DateTime BIRTHDAY { get; set; }
 
+        [Column(TypeName = "nvarchar(10)")]
         [XmlAttribute(AttributeName = "PHONEHOME")]
         public string PHONEHOME { get; set; }
 
+        [Column(TypeName = "nvarchar(20)")]
         [XmlAttribute(AttributeName = "PHONEMOBIL")]
         public string PHONEMOBIL { get; set; }
 
+        [Column(TypeName = "nvarchar(50)")]
         [XmlAttribute(AttributeName = "EMAIL")]
         public string EMAIL { get; set; }
 
+        [Column(TypeName = "nvarchar(50)")]
         [XmlAttribute(AttributeName = "CITY")]
         public string CITY { get; set; }
 
+        [Column(TypeName = "nvarchar(50)")]
         [XmlAttribute(AttributeName = "STREET")]
         public string STREET { get; set; }
 

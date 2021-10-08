@@ -68,5 +68,11 @@ namespace WinFormsXML
             MessageBox.Show("Просьба о результатах сообщить в любом случае, \n " +
                 "с указанием основных ошибок. Андрей. Спасибо!");
         }
+
+        private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            MessageBox.Show("Введен не верный формат данных!");
+            e.ThrowException = false;
+        }
     }
 }
