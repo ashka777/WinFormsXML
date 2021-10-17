@@ -1,70 +1,63 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using WinFormsXML.Models;
 
 namespace WinFormsXML.Logic
 {
     internal class CRUDDataBase
     {
-        private List<object> _dataList;
+        ClientsContext db;
 
-        internal bool InsertDataToDB(List<object> dataList)
+        //Вставка данных в БД
+        internal bool InsertDataToDB(List<Client> dataList)
         {
-            using ClientsContext db = new ClientsContext();
-            try
+            using (ClientsContext db = new ClientsContext())
             {
-                this._dataList = dataList;
-                //Проверяем на отсутствие значения
-                _dataList[1] = (_dataList[1].Equals("")) ? DateTime.MinValue : _dataList[1];
-                _dataList[2] = (_dataList[2].Equals("")) ? DateTime.MinValue : _dataList[2];
-                _dataList[7] = (_dataList[7].Equals("")) ? DateTime.MinValue : _dataList[7];
-                var id = Convert.ToDecimal(_dataList[0]);
-                var searchResult = db.Client.Where(w => w.CARDCODE == id).FirstOrDefault();
-                if (searchResult is not null)
-                    throw new Exception($"Данные с CARDCODE {id} уже есть.");
-
-                Clients newClient = new Clients
+                try
                 {
-                    CARDCODE = Convert.ToDecimal(_dataList[0]),
-                    STARTDATE = Convert.ToDateTime(_dataList[1]),
-                    FINISHDATE = Convert.ToDateTime(_dataList[2]),
-                    LASTNAME = _dataList[3].ToString(),
-                    FIRSTNAME = _dataList[4].ToString(),
-                    SURNAME = _dataList[5].ToString(),
-                    GENDER = _dataList[6].ToString(),
-                    BIRTHDAY = DateTime.Parse(_dataList[7].ToString(), new CultureInfo("ru-RU")), //Для разнообразия, используется при других форматах
-                    PHONEHOME = _dataList[8].ToString(),
-                    PHONEMOBIL = _dataList[9].ToString(),
-                    EMAIL = _dataList[10].ToString(),
-                    CITY = _dataList[11].ToString(),
-                    STREET = _dataList[12].ToString(),
-                    HOUSE = Convert.ToInt32(_dataList[13]),
-                    APARTMENT = Convert.ToInt32(_dataList[14])
-                };
-                db.Client.Add(newClient);
-                db.SaveChanges();
-                InsertToLog($"Успешно добавлена запись {id}");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                db.Dispose();
-                InsertToLog($"Метод InsertDataToDB, {ex.Message}");
-            }
-            return false;
+                    //using SqlConnection connection = new SqlConnection(db.Database.GetConnectionString());
+                    //connection.Open();
+                    //SqlCommand sqlCommand = new SqlCommand("CREATE TABLE dbo.[TETSTEST] (id int, name nvarchar(55));", connection);
+                    //sqlCommand.BeginExecuteNonQuery();
+
+                    foreach (var item in dataList)
+                    {
+                        var searchResult = db.Client.Where(w => w.CARDCODE == item.CARDCODE).FirstOrDefault();
+                        if (searchResult is not null)
+                        {
+                            InsertToLog($"Данные с CARDCODE {item.CARDCODE} уже есть.");
+                            continue;
+                        }
+                        db.Client.AddRange(item);
+                        db.SaveChanges();
+                        InsertToLog($"Успешно добавлена запись {item.CARDCODE}");
+                    }
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    db.Dispose();
+                    InsertToLog($"Метод InsertDataToDB, {ex.Message}, {ex.InnerException.Message}");
+                }
+
+                return false;
+            };
         }
 
-        internal void InsertToLog(string error)
+        //Логирование
+        internal void InsertToLog(string message)
         {
             using (ClientsContext db = new ClientsContext())
             {
                 LogMessages log = new LogMessages
                 {
-                    Message = error,
+                    Message = message,
                     DtIns = DateTime.Now,
                 };
                 db.LogMessage.Add(log);
@@ -72,59 +65,65 @@ namespace WinFormsXML.Logic
             };
         }
 
-        internal BindingList<Clients> ReadData()
+        //Чтение данных из БД
+        internal BindingList<Client> ReadData()
         {
-            using ClientsContext db = new ClientsContext(); try
+            using (ClientsContext db = new ClientsContext())
             {
-                IQueryable<Clients> dataTable;
-                dataTable = db.Client.Select(s => s).DefaultIfEmpty().AsNoTracking();
-                BindingList<Clients> data = new BindingList<Clients>();
-                foreach (var item in dataTable)
+                try
                 {
-                    data.Add(item);
+                    BindingList<Client> data = new BindingList<Client>();
+                    var dataTable = db.Client.Select(s => s).DefaultIfEmpty().AsNoTracking();
+                    foreach (var item in dataTable)
+                    {
+                        data.Add(item);
+                    }
+                    return data;
                 }
-                return data;
+                catch (Exception ex)
+                {
+                    db.Dispose();
+                    InsertToLog($"Метод ReadData, {ex.Message}, {ex.InnerException.Message}");
+                }
+                return new BindingList<Client>();
             }
-            catch (Exception ex)
-            {
-                db.Dispose();
-                InsertToLog($"Метод ReadData, {ex.Message}");
-            }
-            return new BindingList<Clients>();
         }
 
-        internal bool UpdateData(List<object> dataList)
+        //Обновление данных в БД
+        internal bool UpdateData(List<string> dataList)
         {
-            using ClientsContext db = new ClientsContext();
-            try
+            using (ClientsContext db = new ClientsContext())
             {
-                List<object> _dataList = dataList;
-                decimal id = Convert.ToDecimal(_dataList[0]);
-                var clientUpd = db.Client.Where(w => w.CARDCODE == id).Select(s => s).First();
-                clientUpd.STARTDATE = Convert.ToDateTime(_dataList[1]);
-                clientUpd.FINISHDATE = Convert.ToDateTime(_dataList[2]);
-                clientUpd.LASTNAME = _dataList[3].ToString();
-                clientUpd.FIRSTNAME = _dataList[4].ToString();
-                clientUpd.SURNAME = _dataList[5].ToString();
-                clientUpd.GENDER = _dataList[6].ToString();
-                clientUpd.BIRTHDAY = Convert.ToDateTime(_dataList[7]);
-                clientUpd.PHONEHOME = _dataList[8].ToString();
-                clientUpd.PHONEMOBIL = _dataList[9].ToString();
-                clientUpd.EMAIL = _dataList[10].ToString();
-                clientUpd.CITY = _dataList[11].ToString();
-                clientUpd.STREET = _dataList[12].ToString();
-                clientUpd.HOUSE = Convert.ToInt32(_dataList[13]);
-                clientUpd.APARTMENT = Convert.ToInt32(_dataList[14]);
-                db.Client.Update(clientUpd);
-                db.SaveChanges();
-                return true;
+                try
+                {
+                    decimal id = Convert.ToDecimal(dataList[0]);
+                    var clientUpd = db.Client.Where(w => w.CARDCODE == id).Select(s => s).First();
+                    clientUpd.STARTDATE = (dataList[1].Equals("")) ? DateTime.MinValue : Convert.ToDateTime(dataList[1]);
+                    clientUpd.FINISHDATE = (dataList[2].Equals("")) ? DateTime.MinValue : Convert.ToDateTime(dataList[2]);
+                    clientUpd.LASTNAME = dataList[3];
+                    clientUpd.FIRSTNAME = dataList[4];
+                    clientUpd.SURNAME = dataList[5];
+                    clientUpd.GENDER = dataList[6];
+                    clientUpd.BIRTHDAY = (dataList[7].Equals("")) ? DateTime.MinValue : Convert.ToDateTime(dataList[7]);
+                    clientUpd.PHONEHOME = dataList[8];
+                    clientUpd.PHONEMOBIL = dataList[9];
+                    clientUpd.EMAIL = dataList[10];
+                    clientUpd.CITY = dataList[11];
+                    clientUpd.STREET = dataList[12];
+                    clientUpd.HOUSE = dataList[13];
+                    clientUpd.APARTMENT = dataList[14];
+                    db.Client.Update(clientUpd);
+                    db.SaveChanges();
+                    InsertToLog($"Запись {id} успешно обновлена");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    db.Dispose();
+                    InsertToLog($"Метод UpdateData, {ex.Message}, {ex.InnerException.Message}");
+                }
+                return false;
             }
-            catch (Exception ex)
-            {
-                db.Dispose();
-                InsertToLog($"Метод UpdateData, {ex.Message}");
-            }
-            return false;
         }
     }
 }

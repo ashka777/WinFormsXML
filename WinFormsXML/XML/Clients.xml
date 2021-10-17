@@ -17,4 +17,40 @@
   HOUSE="40"
   APARTMENT="2"
 />
+  <Client
+ CARDCODE="12345667899"
+ STARTDATE="2018-07-19"
+ FINISHDATE=""
+ LASTNAME="Сидоров"
+ FIRSTNAME="Петр"
+ SURNAME="Иванович"
+ GENDER="M"
+ BIRTHDAY="1970-01-01"
+ PHONEHOME=""
+ PHONEMOBIL="+7999-554-11-11"
+ EMAIL="vv@robotx.ru"
+ CITY="Калининград г"
+ STREET="Ленинский пр-кт"
+ HOUSE="402"
+ APARTMENT="22"
+/>
+
+  <Client
+ CARDCODE="12345667900"
+ STARTDATE=""
+ FINISHDATE=""
+ LASTNAME=""
+ FIRSTNAME=""
+ SURNAME=""
+ GENDER=""
+ BIRTHDAY=""
+ PHONEHOME=""
+ PHONEMOBIL="+-554-11-11"
+ EMAIL=""
+ CITY=""
+ STREET=" "
+ HOUSE=""
+ APARTMENT=""
+/>
+
 </Clients>

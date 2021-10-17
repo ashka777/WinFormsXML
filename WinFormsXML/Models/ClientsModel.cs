@@ -10,71 +10,49 @@ using System.Xml.Serialization;
 
 namespace WinFormsXML.Models
 {
-    [XmlRoot(ElementName = "Client")]
-    public class Clients
+    #nullable enable
+    public class Client
     {
         [Key()]
         [Column(TypeName = "decimal(18,0)")]
-        [XmlAttribute(AttributeName = "CARDCODE")]
         public decimal CARDCODE { get; set; }
 
-        [XmlAttribute(AttributeName = "STARTDATE")]
-        public DateTime STARTDATE { get; set; }
+        public DateTime? STARTDATE { get; set; }
 
-        [XmlAttribute(AttributeName = "FINISHDATE")]
-        public DateTime FINISHDATE { get; set; }
+        public DateTime? FINISHDATE { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
-        [XmlAttribute(AttributeName = "LASTNAME")]
-        public string LASTNAME { get; set; }
+        public string? LASTNAME { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
-        [XmlAttribute(AttributeName = "FIRSTNAME")]
-        public string FIRSTNAME { get; set; }
+        public string? FIRSTNAME { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
-        [XmlAttribute(AttributeName = "SURNAME")]
-        public string SURNAME { get; set; }
+        public string? SURNAME { get; set; }
 
         [Column(TypeName = "nvarchar(10)")]
-        [XmlAttribute(AttributeName = "GENDER")]
-        public string GENDER { get; set; }
+        public string? GENDER { get; set; }
 
-        [XmlAttribute(AttributeName = "BIRTHDAY")]
-        public DateTime BIRTHDAY { get; set; }
+        public DateTime? BIRTHDAY { get; set; }
 
         [Column(TypeName = "nvarchar(10)")]
-        [XmlAttribute(AttributeName = "PHONEHOME")]
-        public string PHONEHOME { get; set; }
+        public string? PHONEHOME { get; set; }
 
         [Column(TypeName = "nvarchar(20)")]
-        [XmlAttribute(AttributeName = "PHONEMOBIL")]
-        public string PHONEMOBIL { get; set; }
+        public string? PHONEMOBIL { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
-        [XmlAttribute(AttributeName = "EMAIL")]
-        public string EMAIL { get; set; }
+        public string? EMAIL { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
-        [XmlAttribute(AttributeName = "CITY")]
-        public string CITY { get; set; }
+        public string? CITY { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
-        [XmlAttribute(AttributeName = "STREET")]
-        public string STREET { get; set; }
+        public string? STREET { get; set; }
 
-        [XmlAttribute(AttributeName = "HOUSE")]
-        public int HOUSE { get; set; }
+        public string? HOUSE { get; set; }
 
-        [XmlAttribute(AttributeName = "APARTMENT")]
-        public int APARTMENT { get; set; }
+        public string? APARTMENT { get; set; }
     }
-
-    //Закоментировал после автогенерации класса из XML
-    //[XmlRoot(ElementName = "Clients")]
-    //public class Clients
-    //{
-    //	[XmlElement(ElementName = "Client")]
-    //	public Client Client { get; set; }
-    //}
 }
+

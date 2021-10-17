@@ -4,7 +4,7 @@ namespace WinFormsXML.Models
 {
     public class ClientsContext : DbContext
     {
-        public DbSet<Clients> Client { get; set; }
+        public DbSet<Client> Client { get; set; }
 
         public DbSet<LogMessages> LogMessage { get; set; }
 

@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
+using System.Xml.Serialization;
+using WinFormsXML.Models;
+using XML = WinFormsXML.XML;
+using System.Linq;
 
 namespace WinFormsXML.Logic
 {
@@ -14,38 +19,51 @@ namespace WinFormsXML.Logic
             this._xml = xml;
         }
 
-        internal List<object> GetDataFromXML()
+        internal List<Client> DeserializeXML()
         {
-            List<object> listItems = new();
+            List<Client> listClients = new();
             try
             {
-                int i = 0;
-                XmlDocument xDoc = new XmlDocument();
-                xDoc.Load(_xml);
-                XmlElement xmlRroot = xDoc.DocumentElement; // корневой элемент
-                // обход всех узлов в корневом элементе (Если их несколько)
-                foreach (XmlNode xmlNode in xmlRroot)
+                using (Stream readerXML = new FileStream(_xml, FileMode.Open))
                 {
-                    if (xmlNode.Attributes.Count > 0) // здесь ветка Client
+                    XmlSerializer serializer = new XmlSerializer(typeof(XML.Clients));
+                    var dataClients = (XML.Clients)serializer.Deserialize(readerXML);
+
+                    foreach (var client in dataClients.Client)
                     {
-                        foreach (var item in xmlNode.Attributes)
+                        listClients.Add(new Client
                         {
-                            var nameItem = xmlNode.Attributes.Item(i).Name;
-                            string attr = xmlNode.Attributes.GetNamedItem(nameItem).InnerText;
-                            if (attr != null)
-                                listItems.Add(attr);
-                            i++;
-                        }
+                            APARTMENT = client.APARTMENT,
+                            BIRTHDAY = (client.BIRTHDAY.Equals("")) ? DateTime.MinValue : Convert.ToDateTime(client.BIRTHDAY),
+                            CARDCODE = client.CARDCODE,
+                            CITY = client.CITY,
+                            EMAIL = client.EMAIL,
+                            FINISHDATE = (client.FINISHDATE.Equals("")) ? DateTime.MinValue : Convert.ToDateTime(client.FINISHDATE),
+                            FIRSTNAME = client.FIRSTNAME,
+                            GENDER = client.GENDER,
+                            HOUSE = client.HOUSE,
+                            LASTNAME = client.LASTNAME,
+                            PHONEHOME = client.PHONEHOME,
+                            PHONEMOBIL = client.PHONEMOBIL,
+                            STARTDATE = (client.STARTDATE.Equals("")) ? DateTime.MinValue : Convert.ToDateTime(client.STARTDATE),
+                            STREET = client.STREET,
+                            SURNAME = client.SURNAME
+                        });
                     }
-                }
+                };
                 crud.InsertToLog($"Данные из XML были выгружены успешно. Путь файла: {_xml}");
-                return listItems;
+                return listClients;
             }
             catch (Exception ex)
             {
                 crud.InsertToLog($"Метод GetDataFromXML, {ex.Message}");
             }
-            return listItems;
+            return listClients;
         }
     }
+
+
+
+
+
 }
